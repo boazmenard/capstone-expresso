@@ -60,3 +60,4 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Menu'", (err
   }
 });
 
+console.log('All the tables have been seeded with data!')
