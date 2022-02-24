@@ -1,28 +1,32 @@
 const sqlite3 = require('sqlite3')
-const db = new sqlite3.Database('../database.sqlite')
+const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
-const getAllEmployees = () => {
+const getAllEmployees = (req, res, next) => {
     db.all('SELECT * FROM Employee', (err, rows) => {
         if (err) {
-            console.log('Error has occured')
+            console.log('Error has occured getting the employees')
+            console.log(err.message)
         }
-        return rows
+        res.send({employees: rows})
     })
 }
 
-const addNewEmployee = (employee) => {
-    db.run('INSERT INTO Employee (name, position, wage) VALUES ($name, $position, $wage)', {
+const addNewEmployee = (req, res, employee, next) => {
+    db.run('INSERT INTO Employee (name, position, wage, is_current_employee) VALUES ($name, $position, $wage, $isCurrentEmployee)', {
         $name: employee.name,
         $position: employee.position,
-        $wage: employee.wage
-    }, (err) => {
+        $wage: employee.wage,
+        $isCurrentEmployee: employee.isCurrentEmployee
+    }, function(err) {
         if (err) {
             console.log("Couldn't insert employee due to error")
         }
+        console.log('I DID IT')
+        res.status(201).send(employee)
     })
 }
 
-const getEmployeeById = id => {
+const getEmployeeById = (req, res, next, id) => {
     db.get('SELECT * FROM Employee WHERE id = $id', {
         $id: id
     }, (err, row) => {
@@ -33,7 +37,7 @@ const getEmployeeById = id => {
     })
 }
 
-const updateEmployee = employee => {
+const updateEmployee = (req, res, next, employee) => {
     db.run('UPDATE Employee SET name = $name, position = $position, wage = $wage WHERE id = $id', {
         $id: employee.id,
         $name: employee.name,
@@ -46,7 +50,7 @@ const updateEmployee = employee => {
     })
 }
 
-const deleteEmployee = id => {
+const deleteEmployee = (req, res, next, id) => {
     db.run('DELETE FROM Employee WHERE id = $id', {
         $id: id
     }, (err) => {
@@ -55,3 +59,5 @@ const deleteEmployee = id => {
         }
     })
 }
+
+module.exports = {getAllEmployees, addNewEmployee}
