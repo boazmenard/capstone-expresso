@@ -49,3 +49,5 @@ const deleteTimesheet = (req, res, next, id) => {
         }
     })
 }
+
+module.exports = {getAllTimesheets, addANewTimesheet, updateTimesheet, deleteTimesheet}

@@ -21,8 +21,8 @@ const addNewEmployee = (req, res, employee, next) => {
         if (err) {
             console.log("Couldn't insert employee due to error")
         }
-        console.log('I DID IT')
-        res.status(201).send(employee)
+        employee.id = this.lastID
+        res.status(201).send({employee: employee})
     })
 }
 
@@ -33,31 +33,34 @@ const getEmployeeById = (req, res, next, id) => {
         if (err) {
             console.log("Couldn't get that employee due to error")
         }
-        return row
+        res.send({employee: row})
     })
 }
 
-const updateEmployee = (req, res, next, employee) => {
-    db.run('UPDATE Employee SET name = $name, position = $position, wage = $wage WHERE id = $id', {
-        $id: employee.id,
-        $name: employee.name,
-        $position: employee.position,
-        $wage: employee.wage
+const updateEmployee = (req, res, next, newEmployee) => {
+    db.run('UPDATE Employee SET name = $name, position = $position, wage = $wage, is_current_employee = $isCurrentEmployee WHERE id = $id', {
+        $id: newEmployee.id,
+        $name: newEmployee.name,
+        $position: newEmployee.position,
+        $wage: newEmployee.wage,
+        $isCurrentEmployee: newEmployee.isCurrentEmployee
     }, (err) => {
         if (err) {
             console.log("Couldn't update that employee due to error")
         }
+        res.send({employee: newEmployee})
     })
 }
 
 const deleteEmployee = (req, res, next, id) => {
-    db.run('DELETE FROM Employee WHERE id = $id', {
+    db.run('UPDATE Employee SET is_current_employee = 0 WHERE id = $id', {
         $id: id
     }, (err) => {
         if (err) {
             console.log("Couldn't delete that employee due to error")
         }
+        res.send()
     })
 }
 
-module.exports = {getAllEmployees, addNewEmployee}
+module.exports = {getAllEmployees, addNewEmployee, getEmployeeById, updateEmployee, deleteEmployee}
