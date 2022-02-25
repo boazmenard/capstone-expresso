@@ -9,6 +9,14 @@ This project was a capstone project provide by Codecademy at the end of one of t
 - Node.js
 - sqlite3
 
+## Files which contain my code
+- everything in the **api** folder
+- everything in the **dao** folder
+- everything in **server.js**
+- everything in **migration.js**
+
+I used the provided seed.js file to seed my database after creation.
+
 ## Project Overview
 
 In this capstone project, you will build all of the routing and database logic for an internal tool for a coffee shop called Expresso.
