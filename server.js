@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const employeeRouter = require('./api/employeeRouter');
 const menuRouter = require('./api/menuRouter');
 const timesheetRouter = require('./api/timesheetRouter');
+const menuItemsRouter = require('./api/menuItemsRouter');
 
 
 const app = express()
@@ -14,10 +15,7 @@ app.use(cors())
 app.use('/api/employees', employeeRouter)
 app.use('/api/menus', menuRouter)
 app.use('/api/employees/:employeeId/timesheets', timesheetRouter)
-
-// app.param('employeeId', (req, res, next, id) => {
-//     const employee = getEmp
-// })
+app.use('/api/menus/:menuId/menu-items', menuItemsRouter)
 
 app.listen(port, () => {
     console.log(`Server has started listening on port: ${port}`)
