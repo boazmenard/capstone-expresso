@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3')
-const db = new sqlite3.Database('../database.sqlite')
+const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
 const getAllTimesheets = (req, res, next, employeeId) => {
     db.all('SELECT * FROM Timesheet WHERE employee_id = $employeeId', {
@@ -8,7 +8,7 @@ const getAllTimesheets = (req, res, next, employeeId) => {
         if (err) {
             console.log('An error occured trying to get the timesheet')
         }
-        return rows
+        res.send({timesheets: rows})
     })
 }
 
@@ -22,7 +22,8 @@ const addANewTimesheet = (req, res, next, timesheet) => {
         if (err) {
             console.log('An error occured with adding a new timesheet')
         }
-        return this.lastID;
+        timesheet.id = this.lastID
+        res.status(201).send({timesheet: timesheet});
     })
 }
 
@@ -37,6 +38,7 @@ const updateTimesheet = (req, res, next, timesheet) => {
         if (err) {
             console.log('An error occured with updating the timesheet')
         }
+        res.send({timesheet: timesheet})
     })
 }
 
@@ -47,6 +49,7 @@ const deleteTimesheet = (req, res, next, id) => {
         if (err) {
             console.log('An error occured deleting the timesheet')
         }
+        res.status(204).send()
     })
 }
 
